@@ -9,7 +9,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.IdRes;
+import androidx.annotation.IdRes;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;

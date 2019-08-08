@@ -2,13 +2,12 @@ package com.hedyhidoury.calendar.horizontallibrary.views;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.hedyhidoury.calendar.horizontallibrary.adapter.MonthPagerAdapter;
 import com.hedyhidoury.calendar.horizontallibrary.eventbus.BusProvider;
 import com.hedyhidoury.calendar.horizontallibrary.eventbus.Event;
-import com.hedyhidoury.calendar.horizontallibrary.fragment.WeekFragment;
 import com.hedyhidoury.calendar.horizontallibrary.listener.OnMonthChangeListener;
 import com.squareup.otto.Subscribe;
 

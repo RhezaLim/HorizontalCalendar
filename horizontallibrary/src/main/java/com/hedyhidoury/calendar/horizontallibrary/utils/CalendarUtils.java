@@ -4,20 +4,10 @@ package com.hedyhidoury.calendar.horizontallibrary.utils;
  * Created by hidou on 7/31/2017.
  */
 
-import android.support.annotation.NonNull;
-import android.util.MonthDisplayHelper;
+import androidx.annotation.NonNull;
 
-
-import com.hedyhidoury.calendar.horizontallibrary.Day;
 
 import org.joda.time.DateTime;
-
-import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
 public final class CalendarUtils {
 
