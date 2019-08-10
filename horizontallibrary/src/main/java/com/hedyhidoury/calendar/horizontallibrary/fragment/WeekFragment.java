@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.hedyhidoury.calendar.horizontallibrary.R;
 import com.hedyhidoury.calendar.horizontallibrary.eventbus.BusProvider;
 import com.hedyhidoury.calendar.horizontallibrary.eventbus.Event;
+import com.hedyhidoury.calendar.horizontallibrary.utils.TranslateUtils;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -209,7 +210,8 @@ public class WeekFragment extends Fragment {
             DateTime.Property pDoW = dateTime.dayOfWeek();
             String dayName = pDoW.getAsText(Locale.getDefault()).substring(0,2);
             // // TODO: 8/17/2017 make day name view on decorator
-            dayNameView.setText(dayName.substring(0, 1).toUpperCase()+dayName.substring(1));
+//            dayNameView.setText(dayName.substring(0, 1).toUpperCase()+dayName.substring(1));
+            dayNameView.setText(TranslateUtils.translateDay(dayName));
             if(inValidatedDays.contains(position + 1)){
                 BusProvider.getInstance().post(new Event.OnDayDecorateEvent(convertView, dayTextView,dayNameView,
                         dateTime, firstDay, selectedDateTime,true));

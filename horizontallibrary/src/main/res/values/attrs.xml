@@ -28,5 +28,9 @@
 
         <!-- danigarciaalva -->
         <attr name="todaysDateTextColor" format="color"/>
+
+        <attr name="showHourPicker" format="boolean"/>
+        <attr name="headerBgColor" format="color"/>
+        <attr name="selectedTypeFace" format="string"/>
     </declare-styleable>
 </resources>

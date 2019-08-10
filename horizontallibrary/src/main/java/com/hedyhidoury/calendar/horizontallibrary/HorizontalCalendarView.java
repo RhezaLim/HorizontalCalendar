@@ -9,7 +9,9 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.IdRes;
+
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -124,13 +126,30 @@ public class HorizontalCalendarView extends LinearLayout implements
             // today date text color
             int todayDateTextColor = typedArray.getColor(R.styleable
                     .HorizontalCalendarView_todaysDateTextColor, Color.WHITE);
+
+            int headerBgColor = typedArray.getColor(R.styleable
+                    .HorizontalCalendarView_headerBgColor, Color.WHITE);
+
+
+
+            //Flag to show hour picker
+            Boolean showHourPicker = typedArray.getBoolean(R.styleable.HorizontalCalendarView_showHourPicker, false);
+
+            String selectedDayFontPath = typedArray.getString(R.styleable.HorizontalCalendarView_selectedTypeFace);
+            Typeface selectedDayTypeFace;
+            if (selectedDayFontPath != null) {
+                selectedDayTypeFace = Typeface.createFromAsset(context.getAssets(), "fonts/" + selectedDayFontPath);
+            } else {
+                selectedDayTypeFace = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+            }
+
             // week font path
             String weekDayFontPath = typedArray.getString(R.styleable.HorizontalCalendarView_weekTypeFace);
             Typeface weekDayTypeFace;
             if (weekDayFontPath != null) {
                 weekDayTypeFace = Typeface.createFromAsset(context.getAssets(), "fonts/" + weekDayFontPath);
             } else {
-                weekDayTypeFace = Typeface.create(Typeface.SANS_SERIF, 0);
+                weekDayTypeFace = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
             }
 
             Drawable previousWeekIcon = typedArray.getDrawable(R.styleable.HorizontalCalendarView_weekPreviousIcon);
@@ -150,9 +169,10 @@ public class HorizontalCalendarView extends LinearLayout implements
                     todayDateColor,
                     todayDateTextColor,
                     daysTextColor,
-                    daysTextSize
-                    , weekDayTypeFace));
-            setBackgroundColor(calendarBgColor);
+                    daysTextSize,
+                    weekDayTypeFace,
+                    selectedDayTypeFace));
+//            setBackgroundColor(calendarBgColor);
 
             // Setting up month view
             // get header month and year typeface
@@ -161,7 +181,7 @@ public class HorizontalCalendarView extends LinearLayout implements
             if (headerFontPath != null) {
                 headerTypeFace = Typeface.createFromAsset(context.getAssets(), "fonts/" + headerFontPath);
             } else {
-                headerTypeFace = Typeface.create(Typeface.SANS_SERIF, 0);
+                headerTypeFace = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
             }
 
             Drawable previousHeaderIcon = typedArray.getDrawable(R.styleable.HorizontalCalendarView_headerPreviousIcon);
@@ -176,7 +196,7 @@ public class HorizontalCalendarView extends LinearLayout implements
 
             setMonthDecorator(new DefaultMonthDecorator(headerTypeFace, previousHeaderIcon, forwardHeaderIcon));
 
-            int marginViews = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
+            int marginViews = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
 
             // setting up current view
             setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -187,49 +207,53 @@ public class HorizontalCalendarView extends LinearLayout implements
                     (int) getResources().getDimension(R.dimen.full_month_view_height));
             monthParamsLayout.setMargins(0, marginViews, 0, marginViews);
             monthPager = new MonthPager(getContext(), nbOfMonths, idCheck(), this);
+            monthPager.setBackgroundColor(headerBgColor);
             addView(monthPager, monthParamsLayout);
 
             // Adding week view
             LayoutParams weekParamsLayout = new LayoutParams(LayoutParams.MATCH_PARENT,
                     (int) getResources().getDimension(R.dimen.full_week_view_height));
             weekPager = new WeekPager(getContext(), (int) (nbOfMonths * AVG_WEEKS_IN_MONTH), idCheck(), this, this);
+            weekPager.setBackgroundColor(calendarBgColor);
             addView(weekPager, weekParamsLayout);
 
-            // Adding hours view
+            // Adding hours view depend on showHourPicker flag
             // all hours params
-            LayoutParams hoursLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            hoursLayoutParams.setMargins((int) getResources().getDimension(R.dimen.full_hours_text_margin),
-                    0, (int) getResources().getDimension(R.dimen.full_hours_text_margin), 0);
+            if (showHourPicker) {
+                LayoutParams hoursLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                hoursLayoutParams.setMargins((int) getResources().getDimension(R.dimen.full_hours_text_margin),
+                        0, (int) getResources().getDimension(R.dimen.full_hours_text_margin), 0);
 
 
-            // hours font
-            String hoursFontPath = typedArray.getString(R.styleable.HorizontalCalendarView_hoursTypeFace);
+                // hours font
+                String hoursFontPath = typedArray.getString(R.styleable.HorizontalCalendarView_hoursTypeFace);
 
-            if (hoursFontPath != null) {
-                hoursTypeFace = Typeface.createFromAsset(context.getAssets(), "fonts/" + weekDayFontPath);
-            } else {
-                hoursTypeFace = Typeface.create(Typeface.SANS_SERIF, 0);
-            }
-
-            // default hours array
-            String[] hoursArray = getResources().getStringArray(R.array.hours_of_day);
-
-            hoursRadioGroup = new RadioGroup(context);
-            hoursRadioGroup.setLayoutParams(hoursLayoutParams);
-
-            setUpHoursView(hoursArray, hoursTypeFace);
-            hoursRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-                    isHourPicked = true;
-                    RadioButton rb = (RadioButton) findViewById(i);
-                    hourContent = rb.getText().toString();
-                    informDatePicked();
+                if (hoursFontPath != null) {
+                    hoursTypeFace = Typeface.createFromAsset(context.getAssets(), "fonts/" + weekDayFontPath);
+                } else {
+                    hoursTypeFace = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
                 }
-            });
 
-            addView(hoursRadioGroup);
+                // default hours array
+                String[] hoursArray = getResources().getStringArray(R.array.hours_of_day);
+
+                hoursRadioGroup = new RadioGroup(context);
+                hoursRadioGroup.setLayoutParams(hoursLayoutParams);
+
+                setUpHoursView(hoursArray, hoursTypeFace);
+                hoursRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                        isHourPicked = true;
+                        RadioButton rb = (RadioButton) findViewById(i);
+                        hourContent = rb.getText().toString();
+                        informDatePicked();
+                    }
+                });
+
+                addView(hoursRadioGroup);
+            }
         }
 
         invalidate();

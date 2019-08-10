@@ -9,7 +9,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="57dp"
+        android:layout_height="80dp"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:layout_gravity="center"
@@ -31,7 +31,7 @@
         <GridView
             android:id="@+id/gridView"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/full_day_text_width"
+            android:layout_height="60dp"
             android:layout_toRightOf="@+id/left_week_icon"
             android:layout_toLeftOf="@+id/right_week_icon"
             android:gravity="center"
@@ -54,9 +54,5 @@
             tools:ignore="contentDescription"/>
 
     </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.3dp"
-        android:background="@android:color/darker_gray"/>
 
 </LinearLayout>

@@ -37,6 +37,7 @@ public class DefaultDayDecorator implements DayDecorator {
     private int textColor;
     private float textSize;
     private Typeface weekTypeFace;
+    private Typeface selectedTypeFace;
 
     public DefaultDayDecorator(Context context,
                                @ColorInt int selectedDateColor,
@@ -44,7 +45,8 @@ public class DefaultDayDecorator implements DayDecorator {
                                @ColorInt int todayDateTextColor,
                                @ColorInt int textColor,
                                float textSize,
-                               Typeface weekTypeFace) {
+                               Typeface weekTypeFace,
+                               Typeface selectedTypeFace) {
         this.context = context;
         this.selectedDateColor = selectedDateColor;
         this.todayDateColor = todayDateColor;
@@ -52,6 +54,7 @@ public class DefaultDayDecorator implements DayDecorator {
         this.textColor = textColor;
         this.textSize = textSize;
         this.weekTypeFace = weekTypeFace;
+        this.selectedTypeFace = selectedTypeFace;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -62,6 +65,7 @@ public class DefaultDayDecorator implements DayDecorator {
 
         Drawable holoCircle = ContextCompat.getDrawable(context, R.drawable.holo_circle);
         Drawable solidCircle = ContextCompat.getDrawable(context, R.drawable.solid_circle);
+//        Drawable selectedDayBg = ContextCompat.getDrawable(context, R.drawable.bg_selected_day);
 
         holoCircle.setColorFilter(selectedDateColor, PorterDuff.Mode.SRC_ATOP);
         solidCircle.setColorFilter(todayDateColor, PorterDuff.Mode.SRC_ATOP);
@@ -75,27 +79,36 @@ public class DefaultDayDecorator implements DayDecorator {
 
         DateTime calendarStartDate = WeekFragment.CalendarStartDate;
 
+        //set layout behaviour for selected date
         if (selectedDateTime != null) {
             if (selectedDateTime.toLocalDate().equals(dateTime.toLocalDate())) {
-                if (!selectedDateTime.toLocalDate().equals(calendarStartDate.toLocalDate()))
-                    dayTextView.setBackground(holoCircle);
+//                if (!selectedDateTime.toLocalDate().equals(calendarStartDate.toLocalDate())) //disable this validation so current date can be selected
+//                dayTextView.setBackground(selectedDayBg);
+                dayTextView.setTypeface(selectedTypeFace);
+                dayNameTextView.setTypeface(selectedTypeFace);
             } else {
-                dayTextView.setBackground(null);
+//                dayTextView.setBackground(null);
+                dayTextView.setTypeface(weekTypeFace);
+                dayNameTextView.setTypeface(weekTypeFace);
             }
         }
         // testing to see if selected date ot not
-        if (dateTime.toLocalDate().equals(calendarStartDate.toLocalDate())) {
-            dayTextView.setBackground(solidCircle);
-            dayTextView.setTextColor(this.todayDateTextColor);
-        } else {
-            dayTextView.setTextColor(textColor);
-        }
+//        if (dateTime.toLocalDate().equals(calendarStartDate.toLocalDate())) {
+//            dayTextView.setBackground(solidCircle);
+//            dayTextView.setTextColor(this.todayDateTextColor);
+//        } else {
+//            dayTextView.setTextColor(textColor);
+//        }
         float size = textSize;
         if (size == -1)
             size = dayTextView.getTextSize();
         dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
-        dayTextView.setTypeface(weekTypeFace);
-        dayNameTextView.setTypeface(weekTypeFace);
+
+        dayNameTextView.setTextColor(textColor);
+        dayTextView.setTextColor(textColor);
+
+//        dayTextView.setTypeface(weekTypeFace);
+//        dayNameTextView.setTypeface(weekTypeFace);
     }
 
     @Override
